@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 Google LLC
+ * Copyright 2019 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,25 @@
  * limitations under the License.
  */
 
+provider "google" {
+  version = "~> 3.3.0"
+}
+
+provider "null" {
+  version = "~> 2.1"
+}
+
 locals {
   subnet_01 = "${var.network_name}-subnet-01"
   subnet_02 = "${var.network_name}-subnet-02"
   subnet_03 = "${var.network_name}-subnet-03"
+  subnet_04 = "${var.network_name}-subnet-04"
 }
 
 module "vpc-secondary-ranges" {
   source       = "../../"
-  project_id   = "${var.project_id}"
-  network_name = "${var.network_name}"
+  project_id   = var.project_id
+  network_name = var.network_name
 
   subnets = [
     {
@@ -39,8 +48,17 @@ module "vpc-secondary-ranges" {
       subnet_flow_logs      = "true"
     },
     {
-      subnet_name   = "${local.subnet_03}"
-      subnet_ip     = "10.10.30.0/24"
+      subnet_name               = "${local.subnet_03}"
+      subnet_ip                 = "10.10.30.0/24"
+      subnet_region             = "us-west1"
+      subnet_flow_logs          = "true"
+      subnet_flow_logs_interval = "INTERVAL_15_MIN"
+      subnet_flow_logs_sampling = 0.9
+      subnet_flow_logs_metadata = "INCLUDE_ALL_METADATA"
+    },
+    {
+      subnet_name   = "${local.subnet_04}"
+      subnet_ip     = "10.10.40.0/24"
       subnet_region = "us-west1"
     },
   ]

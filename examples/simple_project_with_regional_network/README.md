@@ -4,8 +4,7 @@ This example configures a single simple regional VPC inside of a project.
 
 This VPC has two subnets, with no secondary ranges.
 
-[^]: (autogen_docs_start)
-
+<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Inputs
 
 | Name | Description | Type | Default | Required |
@@ -19,7 +18,8 @@ This VPC has two subnets, with no secondary ranges.
 |------|-------------|
 | network\_name | The name of the VPC being created |
 | network\_self\_link | The URI of the VPC being created |
-| routes | The routes associated with this VPC |
+| project\_id | VPC project id |
+| route\_names | The routes associated with this VPC |
 | subnets\_flow\_logs | Whether the subnets will have VPC flow logs enabled |
 | subnets\_ips | The IP and cidrs of the subnets being created |
 | subnets\_names | The names of the subnets being created |
@@ -27,4 +27,4 @@ This VPC has two subnets, with no secondary ranges.
 | subnets\_regions | The region where subnets will be created |
 | subnets\_secondary\_ranges | The secondary ranges associated with these subnets |
 
-[^]: (autogen_docs_end)
+<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

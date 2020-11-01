@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 Google LLC
+ * Copyright 2019 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,52 +14,67 @@
  * limitations under the License.
  */
 
+output "network" {
+  value       = module.vpc
+  description = "The created network"
+}
+
+output "subnets" {
+  value       = module.subnets.subnets
+  description = "A map with keys of form subnet_region/subnet_name and values being the outputs of the google_compute_subnetwork resources used to create corresponding subnets."
+}
+
 output "network_name" {
-  value       = "${google_compute_network.network.name}"
+  value       = module.vpc.network_name
   description = "The name of the VPC being created"
 }
 
 output "network_self_link" {
-  value       = "${google_compute_network.network.self_link}"
+  value       = module.vpc.network_self_link
   description = "The URI of the VPC being created"
 }
 
+output "project_id" {
+  value       = module.vpc.project_id
+  description = "VPC project id"
+}
+
 output "subnets_names" {
-  value       = "${google_compute_subnetwork.subnetwork.*.name}"
+  value       = [for network in module.subnets.subnets : network.name]
   description = "The names of the subnets being created"
 }
 
 output "subnets_ips" {
-  value       = "${google_compute_subnetwork.subnetwork.*.ip_cidr_range}"
+  value       = [for network in module.subnets.subnets : network.ip_cidr_range]
   description = "The IPs and CIDRs of the subnets being created"
 }
 
 output "subnets_self_links" {
-  value       = "${google_compute_subnetwork.subnetwork.*.self_link}"
+  value       = [for network in module.subnets.subnets : network.self_link]
   description = "The self-links of subnets being created"
 }
 
 output "subnets_regions" {
-  value       = "${google_compute_subnetwork.subnetwork.*.region}"
+  value       = [for network in module.subnets.subnets : network.region]
   description = "The region where the subnets will be created"
 }
 
 output "subnets_private_access" {
-  value       = "${google_compute_subnetwork.subnetwork.*.private_ip_google_access}"
+  value       = [for network in module.subnets.subnets : network.private_ip_google_access]
   description = "Whether the subnets will have access to Google API's without a public IP"
 }
 
 output "subnets_flow_logs" {
-  value       = "${google_compute_subnetwork.subnetwork.*.enable_flow_logs}"
+  value       = [for network in module.subnets.subnets : length(network.log_config) != 0 ? true : false]
   description = "Whether the subnets will have VPC flow logs enabled"
 }
 
 output "subnets_secondary_ranges" {
-  value       = "${data.google_compute_subnetwork.created_subnets.*.secondary_ip_range}"
+  value       = [for network in module.subnets.subnets : network.secondary_ip_range]
   description = "The secondary ranges associated with these subnets"
 }
 
-output "routes" {
-  value       = "${google_compute_route.route.*.name}"
-  description = "The routes associated with this VPC"
+output "route_names" {
+  value       = [for route in module.routes.routes : route.name]
+  description = "The route names associated with this VPC"
 }

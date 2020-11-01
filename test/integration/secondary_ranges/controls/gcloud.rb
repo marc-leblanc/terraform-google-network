@@ -1,10 +1,10 @@
-# Copyright 2018 Google LLC
+# Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#      http://www.apache.org/licenses/LICENSE-2.0
+#     https://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -45,6 +45,23 @@ control "gcloud" do
     end
   end
 
+  describe command("gcloud compute networks subnets describe #{network_name}-subnet-02 --project=#{project_id} --region=us-west1 --format=json") do
+    its(:exit_status) { should eq 0 }
+    its(:stderr) { should eq '' }
+
+    let(:data) do
+      if subject.exit_status == 0
+        JSON.parse(subject.stdout)
+      else
+        {}
+      end
+    end
+
+    it "should have the correct secondaryIpRanges configuration for #{network_name}-subnet-02" do
+      expect(data).not_to include("secondaryIpRanges")
+    end
+  end
+
   describe command("gcloud compute networks subnets describe #{network_name}-subnet-03 --project=#{project_id} --region=us-west1 --format=json") do
     its(:exit_status) { should eq 0 }
     its(:stderr) { should eq '' }
@@ -62,6 +79,23 @@ control "gcloud" do
         "rangeName"   => "#{network_name}-subnet-03-01",
         "ipCidrRange" => "192.168.66.0/24"
       )
+    end
+  end
+
+  describe command("gcloud compute networks subnets describe #{network_name}-subnet-04 --project=#{project_id} --region=us-west1 --format=json") do
+    its(:exit_status) { should eq 0 }
+    its(:stderr) { should eq '' }
+
+    let(:data) do
+      if subject.exit_status == 0
+        JSON.parse(subject.stdout)
+      else
+        {}
+      end
+    end
+
+    it "should have the correct secondaryIpRanges configuration for #{network_name}-subnet-04" do
+      expect(data).not_to include("secondaryIpRanges")
     end
   end
 end

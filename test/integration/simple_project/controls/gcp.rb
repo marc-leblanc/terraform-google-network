@@ -1,10 +1,10 @@
-# Copyright 2018 Google LLC
+# Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#      http://www.apache.org/licenses/LICENSE-2.0
+#     https://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -43,5 +43,15 @@ control "gcp" do
     it { should exist }
     its('ip_cidr_range') { should eq "10.10.20.0/24" }
     its('private_ip_google_access') { should be true }
+  end
+
+  describe google_compute_subnetwork(
+    project: project_id,
+    name: "#{network_name}-subnet-03",
+    region: "us-west1"
+  ) do
+    it { should exist }
+    its('ip_cidr_range') { should eq "10.10.30.0/24" }
+    its('private_ip_google_access') { should be false }
   end
 end
